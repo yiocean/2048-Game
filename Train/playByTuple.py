@@ -35,8 +35,10 @@ if __name__ == "__main__":
     #list = ["U", "R", "D", "L"]
     list = ["R", "D", "L", "U"]
 
-    k = 20 #episode
+    k = 1000 #episode
     final = np.zeros((k, 3), dtype = np.uint32)
+    score200 = []
+    score200sum = 0
     
     for j in range(k):
         original_tuple = np.copy(ntuple.tuple)
@@ -59,7 +61,8 @@ if __name__ == "__main__":
             # find max step
             for i in range(4):
                 tmp.board = game.board
-                m, boardNotUse = tmp.move(list[i]) # m = reward
+                m, tmp.board = tmp.move(list[i]) # m = reward
+               # tmp.board = boardNotUse #check
                 scorelist[i] = m
                 checksum = tmp.check()
                 if checksum == -5:
@@ -76,12 +79,20 @@ if __name__ == "__main__":
                             tmax = t
                             irecord = i
             
+            #get tuple 1
+            getT1 = ntuple.getTupleValueSum(game.board)
             if winFlag == 1:
                 print("win")
                 r, game.board = game.move(list[i])
+                game.newTile()
+                getT2 = ntuple.getTupleValueSum(game.board)
                 score += r
                 cin_flag = 1 #win or lose
+
+                # more than 2048 (more than 16384 -> 16384)
+                ntuple.udpTuple(game.board, r + (getT2 - getT1))
                 row = [j, 1, score, list[irecord]] + [game.board[i][j] for i in range(4) for j in range(4)]
+                #csvfile.writerow(row)
                 break
             elif tmax == -1: #四個方向都不能走 -> 遊戲結束
                 print("lose")
@@ -99,23 +110,31 @@ if __name__ == "__main__":
             else:
                 r, tboard = game.move(list[irecord])
                 game.board = tboard
+                #get tuple 2
+                
                 score += r
                 if r != -5:
                     game.newTile()
+                
+                getT2 = ntuple.getTupleValueSum(game.board)
                 row = [j, 0, score, list[irecord]] + [game.board[i][j] for i in range(4) for j in range(4)]
-                game.printBoard()
-                print("Score: ", score)
+                #game.printBoard()
+                #print("Score: ", score)
             
             row = row + [r]
-            ntuple.udpTuple(game.board, r)
+            ntuple.udpTuple(game.board, r + (getT2 - getT1))
             csvfile.writerow(row)
 
             # test if tuple value change
-            changed_indices = np.where(ntuple.tuple != original_tuple)
-            for r, c in zip(*changed_indices):
-                print(f"position ({r}, {c}) 's value from {original_tuple[r, c]} change to {ntuple.tuple[r, c]}")             
+            # changed_indices = np.where(ntuple.tuple != original_tuple)
+            # for r, c in zip(*changed_indices):
+            #     print(f"position ({r}, {c}) 's value from {original_tuple[r, c]} change to {ntuple.tuple[r, c]}")             
             
 
+        game.printBoard()
+        print("Score: ", score)
+        print("k: ", j)
+        
         if cin_flag == 0:
             loseCot += 1
         elif cin_flag == 1:
@@ -129,11 +148,18 @@ if __name__ == "__main__":
         sheet1.cell(j+2, 2).value = cin_flag
         sheet1.cell(j+2, 3).value = score
         exl.save('Tuple2.xlsx')
+
+        score200sum += score
+        if j % 200 == 0:
+            score200.append(score200sum / j)
+            score200sum = 0
     
     print(winCot / k)
     print(final)
     sheet1.cell(k+5, 1).value = (winCot / k)
     exl.save('Tuple2.xlsx')
+    # print(score200sum)
+    print(score200)
         #exl.save
 
     #csvfile.close()

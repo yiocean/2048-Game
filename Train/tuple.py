@@ -67,8 +67,8 @@ class Tuple():
         self.value[15] = self.tuple[15][self.cot16(board[1][2], board[1][3], board[2][1], board[2][2])]
         self.value[16] = self.tuple[16][self.cot16(board[2][1], board[2][2], board[3][1], board[3][2])]
 
-        #for i in range(17):
-        #    print(self.value[i])
+        # for i in range(17):
+        #     if self.value[i] > 50625
 
         for i in range(17):
             sumnum += self.tuple[i][int(self.value[i])]
@@ -76,8 +76,8 @@ class Tuple():
         return sumnum
     
     #def findMaxStep()
-    def udpTuple(self, board, reward):
-        tmpr = reward * self.alpha
+    def udpTuple(self, board, difference):
+        tmpr = difference * self.alpha
         self.tuple[0][self.cot16(board[0][0], board[0][1], board[1][0], board[1][1])] += tmpr
         self.tuple[1][self.cot16(board[0][2], board[0][3], board[1][2], board[1][3])] += tmpr
         self.tuple[2][self.cot16(board[2][0], board[2][1], board[3][0], board[3][1])] += tmpr
