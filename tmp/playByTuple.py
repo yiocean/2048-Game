@@ -42,20 +42,40 @@ if __name__ == "__main__":
         original_tuple = np.copy(ntuple.tuple)
         game.startNewGame()
         score = 0
-        cin_flag = -1
+        cin_flag = 0
+        r, game.board = ntuple.takeAction(list, game)
 
         while True:
             getT1 = ntuple.getTupleValueSum(game.board)
-            r, game.board = ntuple.takeAction(list, game)
+            #r, game.board = ntuple.takeAction(list, game)
             totalReward += r
             score += r
-            if r != -5:
-                game.newTile()
+
+            # getT2 = ntuple.getTupleValueSum(game.board)
+            # ntuple.udpTuple(game.board, r + (getT2 - getT1))
+
+            # if game.check() == 100:
+            #     cin_flag = 1
+            game.newTile()
+            r, game.board = ntuple.takeAction(list, game)
+
             if game.check() == 100:
                 cin_flag = 1
-            if game.check() == -5:
-                cin_flag = 0
+            if r == -1:
                 break
+            
+            # if r == -1:
+            #     cin_flag = 0
+            #     if game.check() == 100:
+            #         cin_flag = 1
+            #     break
+            
+            # if r != -1:
+            #     game.newTile()
+            
+            # if game.check() == -5:
+            #     cin_flag = 0
+            #     break
 
             getT2 = ntuple.getTupleValueSum(game.board)
             ntuple.udpTuple(game.board, r + (getT2 - getT1))
@@ -86,9 +106,9 @@ if __name__ == "__main__":
         if ((j+1) % milestone) == 0:
             print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
             print("#Episode: {episode}, score: {score}".format(episode = j+1, score = totalReward // milestone ))
-            line = time.strftime('%Y-%m-%d %H:%M:%S\n', time.localtime(time.time()))
+            line = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
             filename.write(line)
-            line = "#Episode: {episode}, score: {score}".format(episode = j+1, score = totalReward // milestone )
+            line = "#Episode: {episode}, score: {score}\n".format(episode = j+1, score = totalReward // milestone )
             filename.write(line)
             ntuple.saveTuple()
             ntuple.printCount(milestone, filename)

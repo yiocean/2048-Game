@@ -78,9 +78,9 @@ class Tuple():
         self.value[2] = self.tuple[2][self.cot16(board[2][0], board[2][1], board[3][0], board[3][1])]
         self.value[3] = self.tuple[3][self.cot16(board[2][2], board[2][3], board[3][2], board[3][3])]
         for i in range(4):
-            self.value[i+3] = self.tuple[i+3][self.cot16(board[i][0], board[i][1], board[i][2], board[i][3])]
+            self.value[i+4] = self.tuple[i+4][self.cot16(board[i][0], board[i][1], board[i][2], board[i][3])]
         for i in range(4):
-            self.value[i+7] = self.tuple[i+7][self.cot16(board[0][i], board[1][i], board[2][i], board[3][i])]
+            self.value[i+8] = self.tuple[i+8][self.cot16(board[0][i], board[1][i], board[2][i], board[3][i])]
         self.value[12] = self.tuple[12][self.cot16(board[0][1], board[0][2], board[1][1], board[1][2])]
         self.value[13] = self.tuple[13][self.cot16(board[1][0], board[1][1], board[2][0], board[2][1])]
         self.value[14] = self.tuple[14][self.cot16(board[1][1], board[1][2], board[2][1], board[2][2])]
@@ -102,9 +102,9 @@ class Tuple():
         self.tuple[2][self.cot16(board[2][0], board[2][1], board[3][0], board[3][1])] += tmpr
         self.tuple[3][self.cot16(board[2][2], board[2][3], board[3][2], board[3][3])] += tmpr
         for i in range(4):
-            self.tuple[i+3][self.cot16(board[i][0], board[i][1], board[i][2], board[i][3])] += tmpr
+            self.tuple[i+4][self.cot16(board[i][0], board[i][1], board[i][2], board[i][3])] += tmpr
         for i in range(4):
-            self.tuple[i+7][self.cot16(board[0][i], board[1][i], board[2][i], board[3][i])] += tmpr
+            self.tuple[i+8][self.cot16(board[0][i], board[1][i], board[2][i], board[3][i])] += tmpr
         self.tuple[12][self.cot16(board[0][1], board[0][2], board[1][1], board[1][2])] += tmpr
         self.tuple[13][self.cot16(board[1][0], board[1][1], board[2][0], board[2][1])] += tmpr
         self.tuple[14][self.cot16(board[1][1], board[1][2], board[2][1], board[2][2])] += tmpr
@@ -136,7 +136,7 @@ class Tuple():
             r, cur = pre.move(list[irecord])
             return r, cur
         else :
-            return -1, -1
+            return -1, pre.board
     
     def printValue(self, board):
         valuesum = 0
