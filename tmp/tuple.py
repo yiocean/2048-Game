@@ -66,10 +66,10 @@ class Tuple():
             d = d1
 
         sumnum = a + b * 15 + c * 15 * 15 + d * 15 * 15 * 15
-        return int(sumnum)
+        return min(int(sumnum), 50625)
     
     def getTupleValueSum(self, board):
-        sumnum = 0
+        sumnum = 0.0
         for i in range(17):
             self.value[i] = 0
         
@@ -87,11 +87,8 @@ class Tuple():
         self.value[15] = self.tuple[15][self.cot16(board[1][2], board[1][3], board[2][1], board[2][2])]
         self.value[16] = self.tuple[16][self.cot16(board[2][1], board[2][2], board[3][1], board[3][2])]
 
-        # for i in range(17):
-        #     if self.value[i] > 50625
-
         for i in range(17):
-            sumnum += self.tuple[i][int(self.value[i])]
+            sumnum += self.value[i]
 
         return sumnum
     
@@ -157,7 +154,8 @@ class Tuple():
             r = pos // 4
             c = pos % 4
             t = b.board[r][c]
-            t = int(self.findPowerOfTwo(t))
+            if t != 0:
+                t = int(self.findPowerOfTwo(t))
             if t > mt :
                 mt = t
             if mt > self.maxtile :

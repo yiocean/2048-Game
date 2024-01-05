@@ -252,59 +252,16 @@ class Board():
                     #print("Win !!!")
                     flag = 100
                     return flag
+        return -1
 
-        full_flag = 0
-        if total_falg < 16:
-            full_flag = 1
-        elif total_falg >= 16:
-            for i in range(4):
-                for j in range(4):
-                    if i >= 1 and i <= 2:
-                        if j >= 1 and j <= 2:
-                            if Board[i, j] == Board[i-1, j] or Board[i, j] == Board[i+1, j] or Board[i, j] == Board[i, j-1] or Board[i, j] == Board[i, j+1]:
-                                full_flag = 1
-                        elif j == 0:
-                            if Board[i, j] == Board[i-1, j] or Board[i, j] == Board[i+1, j] or Board[i, j] == Board[i, j+1]:
-                                full_flag = 1
-                        elif j == 3:
-                            if Board[i, j] == Board[i-1, j] or Board[i, j] == Board[i+1, j] or Board[i, j] == Board[i, j-1]:
-                                full_flag = 1
-                    elif i == 0:
-                        if j == 0:
-                            if Board[i, j] == Board[i+1, j] or Board[i, j] == Board[i, j+1]:
-                                full_flag = 1
-                        elif j == 3:
-                            if Board[i, j] == Board[i+1, j] or Board[i, j] == Board[i, j-1]:
-                                full_flag = 1
-                        else:
-                            if Board[i, j] == Board[i+1, j] or Board[i, j] == Board[i, j+1] or Board[i, j] == Board[i, j-1]:
-                                full_flag = 1
-                    elif i == 3:
-                        if j == 0:
-                            if Board[i, j] == Board[i-1, j] or Board[i, j] == Board[i, j+1]:
-                                full_flag = 1
-                        elif j == 3:
-                            if Board[i, j] == Board[i-1, j] or Board[i, j] == Board[i, j-1]:
-                                full_flag = 1
-                        else:
-                            if Board[i, j] == Board[i-1, j] or Board[i, j] == Board[i, j+1] or Board[i, j] == Board[i, j-1]:
-                                full_flag = 1
-                #print("row full_flag", full_flag)
-        #print("full_flag: ", full_flag)
-        if full_flag == 0:
-            #print(Board)
-            #print("Lose !!!")
-            flag = -5
-            return flag
-
-        return flag
-    
-    def checkBoard(self, tmpboard):
-        k_flag = 0
-        move_flag = 0
-        for i in range(4):
-            for j in range(4):
-                if self.board[i][j] == tmpboard[i][j]:
-                    move_flag += 1
-
-        return move_flag
+    def endOfGame(self):
+        tmp = Board()
+        tmp.copyBoard(self)
+        r1, _ = tmp.moveUp()
+        r2, _ = tmp.moveDown()
+        r3, _ = tmp.moveLeft()
+        r4, _ = tmp.moveRight()
+        if r1 == -5 and r2 == -5 and r3 == -5 and r4 == -5:
+            return True
+        else:
+            return False

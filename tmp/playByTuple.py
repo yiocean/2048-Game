@@ -6,21 +6,27 @@ import os
 import openpyxl
 import csv
 import time
+import datetime
 
 if __name__ == "__main__":
 
+    currentDatetime = datetime.datetime.now()
+    formattedDatetime = currentDatetime.strftime("%m%d-%H%M%S")
+    filename = f"Tuple_{formattedDatetime}.xlsx"
+    filename1 = f"out_{formattedDatetime}.txt"
+
     #creat Excel -> record results（win or lose）
     exl = openpyxl.Workbook()
-    exl.save('Tuple2.xlsx')
-    exl = openpyxl.load_workbook('Tuple2.xlsx') 
+    exl.save(filename)
+    exl = openpyxl.load_workbook(filename) 
     sheet1 = exl['Sheet']
     sheet1.cell(1, 1).value = 'Game number' #(row, col) = (1, 1)
     sheet1.cell(1, 2).value = 'Win or lose'
     sheet1.cell(1, 3).value = 'Final Score'
-    exl.save('Tuple2.xlsx')
+    exl.save(filename)
 
     # record results（% of tiles）
-    filename = open('output.txt', 'w',newline='')
+    filenameOpen = open(filename1, 'w',newline='')
     
     ntuple = Tuple()
     game = Board()
@@ -47,35 +53,18 @@ if __name__ == "__main__":
 
         while True:
             getT1 = ntuple.getTupleValueSum(game.board)
-            #r, game.board = ntuple.takeAction(list, game)
+            #r, game.board = ntuple.takeAction(list, game) -> put here or above
             totalReward += r
             score += r
 
-            # getT2 = ntuple.getTupleValueSum(game.board)
-            # ntuple.udpTuple(game.board, r + (getT2 - getT1))
-
-            # if game.check() == 100:
-            #     cin_flag = 1
             game.newTile()
             r, game.board = ntuple.takeAction(list, game)
+            #game.newTile()
 
             if game.check() == 100:
                 cin_flag = 1
-            if r == -1:
+            if game.endOfGame() == True:
                 break
-            
-            # if r == -1:
-            #     cin_flag = 0
-            #     if game.check() == 100:
-            #         cin_flag = 1
-            #     break
-            
-            # if r != -1:
-            #     game.newTile()
-            
-            # if game.check() == -5:
-            #     cin_flag = 0
-            #     break
 
             getT2 = ntuple.getTupleValueSum(game.board)
             ntuple.udpTuple(game.board, r + (getT2 - getT1))
@@ -107,11 +96,11 @@ if __name__ == "__main__":
             print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
             print("#Episode: {episode}, score: {score}".format(episode = j+1, score = totalReward // milestone ))
             line = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-            filename.write(line)
+            filenameOpen.write(line)
             line = "#Episode: {episode}, score: {score}\n".format(episode = j+1, score = totalReward // milestone )
-            filename.write(line)
+            filenameOpen.write(line)
             ntuple.saveTuple()
-            ntuple.printCount(milestone, filename)
+            ntuple.printCount(milestone, filenameOpen)
             ntuple.resetCount()
             totalReward = 0
     
